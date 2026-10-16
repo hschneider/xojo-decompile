@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# macOS
+.DS_Store
+
+# Xojo projects and decompiler output (keep private sources out of the repo)
+*.xojo_binary_project
+*.xojo_project
+*.xojo_code
+*.xojo_window
+*.xojo_menu
+*.layout.json
+index.json
+
+# Editors
+.vscode/
+.idea/

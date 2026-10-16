@@ -50,7 +50,7 @@ text format closely but is not guaranteed to open in the Xojo IDE.
 
 ## Supported Xojo versions
 
-- Binary projects (RbBF format) saved by Xojo 2019 up to Xojo 2024.
+- Binary projects (RbBF format) saved by Xojo 2019 up to Xojo 2025.
 - Classic desktop UI (`Window`, `ContainerControl`), written as `#tag Window`.
 - API 2 desktop UI introduced in Xojo 2021r3 (`DesktopWindow`,
   `DesktopContainer`), written as `#tag DesktopWindow` /

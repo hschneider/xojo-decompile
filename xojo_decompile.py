@@ -18,7 +18,7 @@
 #
 # Supported Xojo versions:
 #
-# - Binary projects (`RbBF` format) saved by Xojo 2019 up to Xojo 2024.
+# - Binary projects (`RbBF` format) saved by Xojo 2019 up to Xojo 2025.
 # - Classic desktop UI (`Window` in `pVew` blocks, `ContainerControl`),
 #   written as `#tag Window`.
 # - API 2 desktop UI introduced in Xojo 2021r3 (`DesktopWindow`,

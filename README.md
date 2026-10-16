@@ -7,6 +7,10 @@ Every project item (classes, modules, interfaces, windows, containers, menus)
 is extracted. Folders and modules become subdirectories, as in a Xojo text
 project.
 
+**Rescues corrupted projects:** if Xojo can no longer open a damaged
+project file, xojo-decompile still extracts everything that is readable
+(see [Corrupted projects](#corrupted-projects)).
+
 ## Requirements
 
 Python 3, standard library only. No installation needed.
@@ -37,7 +41,9 @@ index = decompile('My App.xojo_binary_project', outdir='out')
 | `<Name>.xojo_window` | Windows and containers: window properties, every control with its non-default properties, the window code, then the control event handlers |
 | `<Name>.layout.json` | The control layout of a window as JSON (class, position, size, parent, panel index and the most useful properties) |
 | `<Name>.xojo_menu` | Menu bars |
-| `index.json` | Every item with kind, super class and path |
+| `index.json` | Every item with kind, super class and path (plus `errors` for damaged items) |
+| `errors.log` | Only for damaged projects: every problem found, by item |
+| `<Name>.raw.txt` | Only for damaged items that cannot be rendered: raw dump of their data |
 
 The output is meant for reading, searching and diffing. It follows the Xojo
 text format closely but is not guaranteed to open in the Xojo IDE.
@@ -49,8 +55,35 @@ text format closely but is not guaranteed to open in the Xojo IDE.
 - API 2 desktop UI introduced in Xojo 2021r3 (`DesktopWindow`,
   `DesktopContainer`), written as `#tag DesktopWindow` /
   `#tag DesktopContainer`.
-- Other versions may work but are untested. An unknown item type stops the
-  run with an error naming the type and file offset.
+- Other versions may work but are untested. Unknown item types are
+  reported in `errors.log` like damaged data.
+
+## Corrupted projects
+
+A damaged `.xojo_binary_project` (disk error, interrupted save, failed sync,
+truncated download) is decompiled as far as possible instead of aborting:
+
+- **Broken file structure:** a damaged header, blocks with invalid sizes,
+  garbage between blocks or a truncated file. Blocks are found by scanning
+  for the next block header.
+- **Damaged item data:** parsing resumes at the next readable item, also
+  after inserted or missing bytes. Everything before and after the damage
+  is kept.
+- **Per member recovery:** methods, properties, controls and event handlers
+  are rendered one by one. One that cannot be rendered is written as a
+  comment with a raw dump of its data, the rest of the item stays intact.
+  An item that cannot be rendered at all is written as `<Name>.raw.txt`.
+- **Report:** damaged items get an `errors` list in `index.json`, and all
+  problems are listed in `errors.log` in the output folder. The run ends
+  with a summary:
+
+  ```
+  7 damaged item(s) recovered partially, see errors.log
+  ```
+
+Data that is physically missing (e.g. the end of a truncated file) cannot
+be recovered, and damaged text inside source code is extracted as is.
+Always check recovered code before using it.
 
 ## Limitations
 
